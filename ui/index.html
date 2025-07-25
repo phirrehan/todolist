@@ -3,27 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.ico" />
-    <title>Todo List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+    <title>ToDo List</title>
   </head>
   <body>
-    <form class="user_input">
-      <label name="todo_item">Enter a task</label>
-      <input name="todo_item" type="text" />
-      <button type="submit">Submit</button>
-    </form>
-    <ul class="list">
-      <li>
-        <span>This is an item</span>
-        <button>Edit</button>
-        <button>Delete</button>
-      </li>
-      <li>
-        <span>This is another item</span>
-        <button>Edit</button>
-        <button>Delete</button>
-      </li>
-    </ul>
+    <h1 class="title">ToDo List</h1>
+    <div class="container">
+      <div class="section">
+        <form class="new-task-form">
+          <label for="new-task">Enter a Task</label>
+          <input
+            class="new-task-input"
+            name="new-task"
+            type="text"
+            placeholder="Task for Later"
+          />
+          <button type="submit" class="submit" onclick="createTodo();">
+            Submit
+          </button>
+        </form>
+      </div>
+      <div class="section">
+        <ul class="task-list">
+          <li class="task">
+            <div class="task-div">
+              <span>
+                This is an item that I am testing to see if it's wrapped
+              </span>
+              <button
+                class="task-list-button"
+                onclick="editItem(this.parentElement);"
+              >
+                Edit
+              </button>
+              <button class="task-list-button">Delete</button>
+            </div>
+          </li>
+          <li class="task">
+            <div class="task-div">
+              <span> This is another item </span>
+              <button
+                class="task-list-button"
+                onclick="editItem(this.parentElement);"
+              >
+                Edit
+              </button>
+              <button class="task-list-button">Delete</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </body>
 </html>
