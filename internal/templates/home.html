@@ -10,8 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script defer src="/static/script.js"></script>
     <title>ToDo List</title>
   </head>
   <body>
@@ -32,34 +32,7 @@
         </form>
       </div>
       <div class="section">
-        <ul class="task-list">
-          <li class="task">
-            <div class="task-div">
-              <span>
-                This is an item that I am testing to see if it's wrapped
-              </span>
-              <button
-                class="task-list-button"
-                onclick="editItem(this.parentElement);"
-              >
-                Edit
-              </button>
-              <button class="task-list-button">Delete</button>
-            </div>
-          </li>
-          <li class="task">
-            <div class="task-div">
-              <span> This is another item </span>
-              <button
-                class="task-list-button"
-                onclick="editItem(this.parentElement);"
-              >
-                Edit
-              </button>
-              <button class="task-list-button">Delete</button>
-            </div>
-          </li>
-        </ul>
+        <ul class="task-list"></ul>
       </div>
     </div>
   </body>
