@@ -15,7 +15,7 @@ document
 
     if (response.ok) {
       form.reset();
-      fetchItems();
+      location.reload();
     } else {
       alert("Unsuccesful");
     }
@@ -31,7 +31,7 @@ async function fetchItems() {
     const htmlItem = `
 <li data-status="${todo["status"]}" id="${todo["id"]}" class="task">
   <div class="task-div">
-      <span class="${todo["status"] === true ? "strikethrough" : ""}" onclick="toggleStatus(this.parentElement.parentElement);">${todo["description"]}</span>
+    <span>${todo["description"]}</span>
     <button class="task-list-button" onclick="editItemForm(this.parentElement);">
       Edit
     </button>
@@ -45,12 +45,11 @@ async function fetchItems() {
   listElement.innerHTML = list;
 }
 
-function editFormTemplate(itemDiv) {
+function editFormTemplate(itemId) {
+  const item = document.getElementById(itemId);
   const form = document.createElement("form");
-  const item = itemDiv.parentElement;
-  const itemId = item.id;
   const status = item.dataset.status;
-  const currentText = itemDiv.querySelector("span").textContent.trim();
+  const currentText = item.querySelector(span).currentText.trim();
   form.classList.add("edit-form");
   form.onsubmit = (e) => {
     e.preventDefault();
@@ -58,8 +57,8 @@ function editFormTemplate(itemDiv) {
   };
   form.innerHTML = `
   <input id="hidden-id" type="hidden" name="id" value="${itemId}" />
-  <input id="hidden-status" type="hidden" name="status" value="${status}" />
-  <input id="description" type="text" name="description" class="edit-form-input" value="${currentText}" />
+    <input id="hidden-status" type="hidden" name="status" value="${status}"
+      <input id="description" type="text" name="description" class="edit-form-input" value="${currentText}" />
       <button type="submit" class="task-list-button">
         Save
       </button>
@@ -71,39 +70,16 @@ function editFormTemplate(itemDiv) {
 }
 
 function editItemForm(itemDiv) {
-  const form = editFormTemplate(itemDiv);
+  const itemId = itemDiv.parentElement.id;
+  const form = editFormTemplate(itemId);
   itemDiv.parentElement.appendChild(form);
   itemDiv.classList.add("hidden");
 }
 
 async function editItem(form) {
-  const itemId = form.querySelector("#hidden-id").value;
-  const itemStatus = form.querySelector("#hidden-status").value;
-  const itemDescription = form.querySelector("#description").value;
-  const formData = new FormData();
-  formData.append("id", itemId);
-  formData.append("status", itemStatus);
-  formData.append("description", itemDescription);
-  await fetch("/todo", {
-    method: "PUT",
-    body: formData,
-  });
-  fetchItems();
-}
-
-async function toggleStatus(item) {
-  const itemId = item.id;
-  const status = item.dataset.status === "true";
-  const description = item.querySelector("span").textContent.trim();
-  const formData = new FormData();
-  formData.append("id", itemId);
-  formData.append("status", !status);
-  formData.append("description", description);
-  await fetch("/todo", {
-    method: "PUT",
-    body: formData,
-  });
-  await fetchItems();
+  const tmp = document.querySelector();
+  tmp.querySelector();
+  const id = form.querySelector("#hidden-id");
 }
 
 function cancelEdit(item) {
@@ -122,5 +98,5 @@ async function deleteItem(itemDiv) {
     method: "DELETE",
     body: formData,
   });
-  fetchItems();
+  location.reload();
 }

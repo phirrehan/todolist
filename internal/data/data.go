@@ -1,4 +1,4 @@
-package data
+package db
 
 import (
 	"crypto/sha256"
@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-type todo struct {
+type Todo struct {
 	Id          string `json:"id"`
 	Description string `json:"description"`
 	Status      bool   `json:"status"`
@@ -42,20 +42,19 @@ func createFile() {
 	fmt.Printf("Wrote %d Number of Bytes\n", bytes)
 }
 
-func parseJson(slicePtr *[]todo) error {
+func parseJson(slicePtr *[]Todo) error {
 	fileData, err := os.ReadFile("data.json")
 	if err != nil {
 		return fmt.Errorf("Error reading json: %v", err)
 	}
 
-	jsonerr := json.Unmarshal(fileData, slicePtr)
-	if jsonerr != nil {
-		return fmt.Errorf("Error parsing json: %v", jsonerr)
+	if err := json.Unmarshal(fileData, slicePtr); err != nil {
+		return fmt.Errorf("Error parsing json: %v", err)
 	}
 	return nil
 }
 
-func reWriteJson(slice []todo) error {
+func encodeJson(slice []Todo) error {
 	newJson, err := json.Marshal(slice)
 	if err != nil {
 		return fmt.Errorf("Error encoding json: %v", err)
@@ -71,7 +70,7 @@ func reWriteJson(slice []todo) error {
 	return nil
 }
 
-func searchTodos(todos []todo, searchId string) int {
+func searchTodos(todos []Todo, searchId string) int {
 	for i, todo := range todos {
 		if todo.Id == searchId {
 			return i
@@ -80,74 +79,83 @@ func searchTodos(todos []todo, searchId string) int {
 	return -1
 }
 
+func GetTodos() []Todo {
+	var todos []Todo
+	err := parseJson(&todos)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error getting Todos: %v", err)
+	}
+	return todos
+}
+
 func AddTodo(description string) {
 	//
 	if checkFileNotExists() {
 		createFile()
 	}
 
-	var todos []todo
+	var todos []Todo
 	if err := parseJson(&todos); err != nil {
-		fmt.Fprint(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "%v", err)
 		return
 	}
 
-	newTodo := todo{
+	newTodo := Todo{
 		Id:          hashString(description),
 		Description: description,
 		Status:      false,
 	}
 	todos = append(todos, newTodo)
-	if err := reWriteJson(todos); err != nil {
-		fmt.Fprint(os.Stderr, err)
+	if err := encodeJson(todos); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return
 	}
 }
 
 func EditTodo(id string, description string, status bool) {
 	if checkFileNotExists() {
-		fmt.Fprintf(os.Stderr, "Error editing item: data.json does not exist")
+		fmt.Fprintf(os.Stderr, "Error editing item: data.json does not exist\n")
 		return
 	}
 
-	var todos []todo
+	var todos []Todo
 	parseJson(&todos)
 
 	indexToEdit := searchTodos(todos, id)
 	if indexToEdit == -1 {
-		fmt.Fprintf(os.Stderr, "Error searching id in data: no entry of %s found in data.json", id)
+		fmt.Fprintf(os.Stderr, "Specified ID not found\n")
 		return
 	}
-	todos[indexToEdit] = todo{
+	todos[indexToEdit] = Todo{
 		Id:          id,
 		Description: description,
 		Status:      status,
 	}
 
-	if err := reWriteJson(todos); err != nil {
-		fmt.Fprint(os.Stderr, err)
+	if err := encodeJson(todos); err != nil {
+		fmt.Fprintf(os.Stderr, "%v", err)
 		return
 	}
 }
 
 func DeleteTodo(id string) {
 	if checkFileNotExists() {
-		fmt.Fprintf(os.Stderr, "Error deleting item: data.json does not exist")
+		fmt.Fprintf(os.Stderr, "Error deleting item: data.json does not exist\n")
 		return
 	}
 
-	var todos []todo
+	var todos []Todo
 	parseJson(&todos)
 
 	indexToRemove := searchTodos(todos, id)
 	if indexToRemove == -1 {
-		fmt.Fprintf(os.Stderr, "Error searching id in data: no entry of %s found in data.json", id)
+		fmt.Fprintf(os.Stderr, "Specified ID does not exist\n")
 		return
 	}
 	todos = append(todos[:indexToRemove], todos[indexToRemove+1:]...)
 
-	if err := reWriteJson(todos); err != nil {
-		fmt.Fprint(os.Stderr, err)
+	if err := encodeJson(todos); err != nil {
+		fmt.Fprintf(os.Stderr, "%v", err)
 		return
 	}
 }

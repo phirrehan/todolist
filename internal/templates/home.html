@@ -14,25 +14,30 @@
     <script defer src="/static/script.js"></script>
     <title>ToDo List</title>
   </head>
-  <body>
+  <body onload="fetchItems();">
     <h1 class="title">ToDo List</h1>
     <div class="container">
       <div class="section">
-        <form class="new-task-form">
-          <label for="new-task">Enter a Task</label>
+        <form
+          id="new-task-form"
+          action="/todo"
+          method="POST"
+          class="new-task-form"
+        >
+          <label for="description">Enter a Task</label>
           <input
+            id="new-task-input"
             class="new-task-input"
-            name="new-task"
+            name="description"
             type="text"
             placeholder="Task for Later"
+            required
           />
-          <button type="submit" class="submit" onclick="createTodo();">
-            Submit
-          </button>
+          <button type="submit" class="submit">Submit</button>
         </form>
       </div>
       <div class="section">
-        <ul class="task-list"></ul>
+        <ul id="items-list" class="task-list"></ul>
       </div>
     </div>
   </body>

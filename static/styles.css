@@ -122,6 +122,10 @@ body {
   display: none;
 }
 
+.strikethrough {
+  text-decoration: line-through;
+}
+
 @media only screen and (max-width: 600px) {
   .new-task-input {
     width: 13rem;
